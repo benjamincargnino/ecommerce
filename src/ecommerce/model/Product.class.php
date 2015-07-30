@@ -12,6 +12,7 @@
         private $fPrice;
         private $aCategories = array();
         private $iRating;
+        private $iActive;
         
 
         /**
@@ -137,6 +138,19 @@
         public function getRating()
         {
             return $this->iRating;
+        }
+
+        public function setActive($iActive)
+        {
+            $this->iActive = $iActive;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getActive()
+        {
+            return $this->iActive;
         }
 
     }

@@ -11,6 +11,7 @@ use ecommerce\model\Category;
 <a href="<?= $oCategory->getUrl(); ?>"><img src="<?= $oCategory->getImage(); ?>" alt=""/></a>
 </div>
 
+<?php if(isset($aProducts)) { ?>
 <h2>Produit en avant</h2>
 
 <div class="row">
@@ -18,17 +19,16 @@ use ecommerce\model\Category;
     <?php /* @var $oProduct \ecommerce\model\Product */ ?>
     <div class="col-sm-6">
         <div class="product thumbnail">
+            <h3><a href="<?= $oProduct->getUrl(); ?>"><?= $oProduct->getName(); ?></a></h3>
+            <p><?= $oProduct->getShortDescription(50); ?></p>
             <a href="<?= $oProduct->getUrl(); ?>"><img src="<?= $oProduct->getImage(); ?>" alt=""
              class="img-responsive pull-left img-rounded"/></a>
-
-             <h3><a href="<?= $oProduct->getUrl(); ?>"><?= $oProduct->getName(); ?></a></h3>
-
-             <p><?= $oProduct->getShortDescription(250); ?></p>
          </div>
      </div>
  <?php endforeach; ?>
 </div>
 
+<?php if(count($aProducts)>4) { ?>
 <h3>Autres produits en vente</h3>
 <ul class="list-unstyled">
     <?php foreach (array_slice($aProducts, 4, count($aProducts)) as $oProduct): ?>
@@ -44,3 +44,6 @@ use ecommerce\model\Category;
 <?php endforeach; ?>
 </ul>
 
+<?php } ?>
+
+<?php } ?>

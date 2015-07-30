@@ -50,7 +50,7 @@ class AccountController
 private function homeAction()
 {
     $aCategories = CategoryManager::getAll();
-    $aProducts = ProductManager::getRandom(4);
+    $aProducts = ProductManager::getRandom(4,1);
     require ROOT . 'src/ecommerce/view/home.php';
 }
 

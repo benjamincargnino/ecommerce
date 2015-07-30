@@ -29,6 +29,7 @@ use ecommerce\model\Product;
             $oProduct->setImage($aProduct['image']);
             $oProduct->setPrice(floatval($aProduct['price']));
             $oProduct->setRating(intval($aProduct['rating']));
+            $oProduct->setActive(intval($aProduct['active']));
             return $oProduct;
         }
 
@@ -57,9 +58,13 @@ use ecommerce\model\Product;
          *
          * @return array(Product) random products.
          */
-        public static function getRandom($iLimit)
+        public static function getRandom($iLimit, $active = false)
         {
-            $sQuery = 'select * from product order by rand() limit ' . $iLimit;
+            $sQuery = "select * from product ";
+            if ($active !== false) {
+                $sQuery .= " WHERE active = ".$active;
+            }
+            $sQuery .= " order by rand() limit " . $iLimit;
             $aProducts = array();
             foreach (DBOperation::getAll($sQuery) as $aProduct) {
                 $aProducts[] = self::convertToObject($aProduct);
@@ -113,9 +118,13 @@ use ecommerce\model\Product;
          *
          * @return array(Product) all products.
          */
-        public static function getAll()
+        public static function getAll($active = false)
+
         {
             $sQuery = 'select * from product';
+            if($active !== false) {
+                $sQuery .= " WHERE active = " . $active;
+            }
             $aProducts = array();
             foreach (DBOperation::getAll($sQuery) as $aProduct) {
                 $aProducts[] = self::convertToObject($aProduct);
@@ -200,4 +209,45 @@ public static function getAllFromOrder($id)
     }
     return $aAllOrders;
 }
+
+public static function remove($iId)
+{
+    $sQuery = " delete from comment ";
+    $sQuery .= " where product_id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+
+    $sQuery = " delete from product_category ";
+    $sQuery .= " where product_id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+
+    $sQuery = " delete from product ";
+    $sQuery .= " WHERE id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+    if(null !== $sLastSqlError = DBOperation::getLastSqlError()){
+        throw new \Exception($sLastSqlError);
+    }
+}
+
+public static function archive($iId)
+{
+    $sQuery = " update product ";
+    $sQuery .= "set active = 0"; 
+    $sQuery .= " WHERE id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+    if(null !== $sLastSqlError = DBOperation::getLastSqlError()){
+        throw new \Exception($sLastSqlError);
+    }
+}
+
+public static function display($iId)
+{
+    $sQuery = " update product ";
+    $sQuery .= "set active = 1"; 
+    $sQuery .= " WHERE id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+    if(null !== $sLastSqlError = DBOperation::getLastSqlError()){
+        throw new \Exception($sLastSqlError);
+    }
+}
+
 }

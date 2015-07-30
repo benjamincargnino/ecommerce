@@ -44,7 +44,7 @@ class CategoryController
     private function homeAction()
     {
         $aCategories = CategoryManager::getAll();
-        $aProducts = ProductManager::getRandom(4);
+        $aProducts = ProductManager::getRandom(4,1);
         require ROOT . 'src/ecommerce/view/home.php';
     }
 
@@ -111,122 +111,38 @@ class CategoryController
 
             $oCategory->setImage($newfilename);
             CategoryManager::update($oCategory);
-            
 
-           // $aCategories = CategoryManager::getAll();
-
-            //$aProducts = ProductManager::getAllFromCategory($oCategory);
             require ROOT . 'src/ecommerce/view/category/show.php';
 
         }else{
 
+            if (null === $oCategory) {
+                $this->homeAction();
+                return;
+            }
 
             $aCategories = CategoryManager::getAll();
-
             require ROOT . 'src/ecommerce/view/category/edit.php';
         }
-
-
     }
 
-    private function handleCart()
-    {
-        if (array_key_exists('remove', $_POST)) {
-            $oCartProduct = new CartProduct();
-            $oCartProduct->setId(intval($_POST['product']));
-            CartManager::remove($oCartProduct);
-        } elseif (array_key_exists('edit', $_POST)) {
-            $oCartProduct = new CartProduct();
-            $oCartProduct->setId(intval($_POST['product']));
-            $oCartProduct->setQuantity(intval($_POST['quantity']));
-            CartManager::update($oCartProduct);
-        }
-
-        $aCart = CartManager::getAll();
-        $fTotal = number_format(CartManager::getTotal(), 2);
-        require ROOT . 'src/ecommerce/view/cart.php';
+    private function listAction()
+    {   
+        $aCategories = CategoryManager::getAll();
+        require ROOT . 'src/ecommerce/view/category/list.php';
     }
 
-    private function handleAccount()
+    private function removeAction()
     {
-        $oCurrentOrder = OrderManager::getCurrent(UserManager::getCurrent());
-        $aOldOrders = OrderManager::getAll(UserManager::getCurrent());
-        require ROOT . 'src/ecommerce/view/account.php';
-    }
-
-    private function handlePopulate()
-    {
-        if (array_key_exists('addProduct', $_POST)) {
-            $oProduct = new Product();
-            $oProduct->setName($_POST['name']);
-            $oProduct->setPrice($_POST['price']);
-            $oProduct->setDescription($_POST['description']);
-            foreach ($_POST['categories'] as $iCategoryId) {
-                $oProduct->addCategory(CategoryManager::get($iCategoryId));
-            }
-            $bCreateSuccess = ProductManager::create($oProduct);
-        }
-        if (array_key_exists('addComments', $_POST)) {
-            $oProduct = ProductManager::get($_POST['product']);
-            foreach ($_POST['users'] as $oUserEmail) {
-                $oUser = new User();
-                $oUser->setEmail($oUserEmail);
-                $oUser = UserManager::get($oUser);
-                $oComment = new Comment();
-                $oComment->setDate(date('Y-m-d H:i:s'));
-                $oComment->setMark(rand(0, 5));
-                $oComment->setComment(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer suscipit justo massa, sit amet suscipit felis pharetra vel. Duis non tristique velit, quis sodales mauris. Mauris auctor rutrum elit, ac rutrum elit consequat consequat. Aenean laoreet id odio ut imperdiet. Sed interdum purus non velit rutrum venenatis. Etiam congue adipiscing magna sed posuere. Suspendisse cursus massa eget eros mollis, nec posuere nisi tincidunt. Maecenas porttitor enim sed massa feugiat suscipit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut quis dui dolor.'
-                    );
-                $oComment->setProduct($oProduct);
-                $oComment->setUser($oUser);
-
-                CommentManager::create($oComment);
-            }
-        }
-        require ROOT . 'src/ecommerce/view/populate.php';
-    }
-
-    public function handleSubmitOrder()
-    {
-        $bSuccess = CartManager::save(CartManager::getAll(), UserManager::getCurrent());
-
-        if ($bSuccess) {
-            CartManager::clean();
-        }
-        $this->homeAction();
-    }
-
-    private function addToCart()
-    {
-        if (array_key_exists('addToCart', $_POST)) {
-            $oCartProduct = new CartProduct();
-            $oCartProduct->setId(intval($_POST['product']));
-            $oCartProduct->setQuantity(intval($_POST['quantity']));
-            CartManager::add($oCartProduct);
+        $iId = intval($_GET['id']);
+        $oCategory = CategoryManager::get($iId);
+        try{
+            $result = CategoryManager::remove($iId);
+            $aCategories = CategoryManager::getAll();
+            require ROOT . 'src/ecommerce/view/category/list.php';
+        }catch (\Exception $e){
+            $result = $e->getMessage();
+            echo "La catégorie ne peux pas être supprimée car elle contient des produits";
         }
     }
-
-    private function commentAction()
-    {
-     $comment = $_POST['comment'];
-
-     $productId = $_POST['product-id'];
-     $oProduct =  ProductManager::get($productId);
-     $oUser = UserManager::getCurrent();
-
-     $oComment = new Comment();
-     $oComment->setDate(date('Y-m-d H:i:s'));
-     $oComment->setMark(rand(0, 5));
-     $oComment->setComment($comment);
-     $oComment->setProduct($oProduct);
-     $oComment->setUser($oUser);
-
-     try{
-        $result = CommentManager::create($oComment);
-    }catch (\Exception $e){
-        $result = $e->getMessage();
-    }
-    echo $result;
-}
 }

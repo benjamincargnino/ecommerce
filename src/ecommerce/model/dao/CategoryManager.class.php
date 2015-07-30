@@ -122,4 +122,15 @@ public static function update(Category $oCategory)
 
     return true;
 }
+
+public static function remove($iId)
+{
+
+    $sQuery = " delete from category ";
+    $sQuery .= " WHERE id = " . $iId;
+    $iRetExec = DBOperation::exec($sQuery);
+    if(null !== $sLastSqlError = DBOperation::getLastSqlError()){
+        throw new \Exception($sLastSqlError);
+    }
+}
 }

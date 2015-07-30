@@ -19,8 +19,8 @@ class ProductController
 
     public function __construct()
     {
-       $sAction = 'home';
-       if (array_key_exists('action', $_GET)) {
+     $sAction = 'home';
+     if (array_key_exists('action', $_GET)) {
         $sAction = $_GET['action'];
     }
 
@@ -49,7 +49,7 @@ class ProductController
 private function homeAction()
 {
     $aCategories = CategoryManager::getAll();
-    $aProducts = ProductManager::getRandom(4);
+    $aProducts = ProductManager::getRandom(4,1);
     require ROOT . 'src/ecommerce/view/home.php';
 }
 
@@ -71,7 +71,7 @@ private function showAction()
     } else {
         $aCategories = CategoryManager::getFromProductId($iId);
         $aComments = CommentManager::getAllFromProduct($oProduct);
-        $aSimilarProducts = ProductManager::getRandom(4);
+        $aSimilarProducts = ProductManager::getRandom(4,1);
         require ROOT . 'src/ecommerce/view/product/show.php';
     }
 }
@@ -123,13 +123,17 @@ private function editAction()
         }
 
         $aComments = CommentManager::getAllFromProduct($oProduct);
-        $aSimilarProducts = ProductManager::getRandom(5);
+        $aSimilarProducts = ProductManager::getRandom(5,1);
         $aCategories = CategoryManager::getAll();
         require ROOT . 'src/ecommerce/view/product/show.php';
 
     }else{
-        //$aComments = CommentManager::getAllFromProduct($oProduct);
-        $aSimilarProducts = ProductManager::getRandom(5);
+        if (null === $oProduct) {
+            $this->homeAction();
+            return;
+        }
+
+        $aSimilarProducts = ProductManager::getRandom(5,1);
         $aCategories = CategoryManager::getAll();
 
         require ROOT . 'src/ecommerce/view/product/edit.php';
@@ -158,7 +162,7 @@ private function cartAction()
 
 private function confirmationAction()
 {
-   {
+ {
     if (array_key_exists('remove', $_POST)) {
         $oCartProduct = new CartProduct();
         $oCartProduct->setId(intval($_POST['product']));
@@ -213,23 +217,23 @@ public function submitorderAction()
 
 private function commentAction()
 {
- $name =  $_POST['name'];
- $comment = $_POST['comment'];
- $iMark = $_POST['stars'];
+   $name =  $_POST['name'];
+   $comment = $_POST['comment'];
+   $iMark = $_POST['stars'];
 
- $productId = $_POST['product-id'];
- $oProduct =  ProductManager::get($productId);
- $oUser = UserManager::getCurrent();
+   $productId = $_POST['product-id'];
+   $oProduct =  ProductManager::get($productId);
+   $oUser = UserManager::getCurrent();
 
- $oComment = new Comment();
- $oComment->setDate(date('Y-m-d H:i:s'));
- $oComment->setMark($iMark);
- $oComment->setName($name);
- $oComment->setComment($comment);
- $oComment->setProduct($oProduct);
- $oComment->setUser($oUser);
+   $oComment = new Comment();
+   $oComment->setDate(date('Y-m-d H:i:s'));
+   $oComment->setMark($iMark);
+   $oComment->setName($name);
+   $oComment->setComment($comment);
+   $oComment->setProduct($oProduct);
+   $oComment->setUser($oUser);
 
- try{
+   try{
     $result = CommentManager::create($oComment);
 }catch (\Exception $e){
     $result = $e->getMessage();
@@ -239,12 +243,48 @@ echo $result;
 
 private function addtocartAction()
 {
-          
+
     $oCartProduct = new CartProduct();
     $oCartProduct->setId(intval($_POST['product']));
     $oCartProduct->setQuantity(intval($_POST['quantity']));
 
     CartManager::add($oCartProduct);
-        
+
 }
+
+private function listAction()
+{   
+    $aProducts = ProductManager::getAll();
+    require ROOT . 'src/ecommerce/view/product/list.php';
+}
+
+private function removeAction()
+{
+    $iId = intval($_GET['id']);
+    $oProduct = ProductManager::get($iId);
+    try{
+        $result = ProductManager::remove($iId);
+        $aProducts = ProductManager::getAll();
+        require ROOT . 'src/ecommerce/view/product/list.php';
+    }catch (\Exception $e){
+        $result = $e->getMessage();
+        echo "Le produit ne peut pas être supprimé car il fait partie d'une commande";
+    }
+}
+
+private function archiveAction()
+{
+    $iId = intval($_GET['id']);
+    $oProduct = ProductManager::get($iId);
+    if($oProduct->getActive() == 1) 
+    {
+        $result = ProductManager::archive($iId);
+    } 
+    if($oProduct->getActive() == 0) 
+    {
+        $result = ProductManager::display($iId);
+    }    
+    $aProducts = ProductManager::getAll();
+    require ROOT . 'src/ecommerce/view/product/list.php';
+}    
 }
