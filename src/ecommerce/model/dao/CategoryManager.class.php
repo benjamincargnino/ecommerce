@@ -126,7 +126,7 @@ public static function update(Category $oCategory)
 public static function remove($iId)
 {
 
-    $sQuery = " delete from category ";
+    $sQuery = " DELETE FROM category ";
     $sQuery .= " WHERE id = " . $iId;
     $iRetExec = DBOperation::exec($sQuery);
     if(null !== $sLastSqlError = DBOperation::getLastSqlError()){

@@ -48,7 +48,6 @@ switch ($sPage) {
 
 function homeAction($sPage)
 {
-	
 	require ROOT . 'inc/site.header.inc.php';
 	$aCategories = CategoryManager::getAll();
 	$aProducts = ProductManager::getRandom(4, 1);

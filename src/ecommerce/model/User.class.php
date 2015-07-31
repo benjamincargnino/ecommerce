@@ -19,6 +19,20 @@
         private $sFirstName;
         private $sCp;
         private $sCity;
+        private $sRole;
+
+        public function setRole($sRole)
+        {
+            $this->sRole = $sRole;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getRole()
+        {
+            return $this->sRole;
+        }
 
 
         public function setCp($sCp)

@@ -29,6 +29,7 @@ use ecommerce\model\User;
             $oUser->setFirstName($aUser['firstname']);
             $oUser->setCp($aUser['cp']);
             $oUser->setCity($aUser['city']);
+            $oUser->setRole($aUser['role']);
             return $oUser;
         }
 

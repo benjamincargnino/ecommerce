@@ -20,7 +20,7 @@
          */
         public function setPrice($fPrice)
         {
-            $this->fPrice = floatval(number_format($fPrice, 2));
+            $this->fPrice = $fPrice;
         }
 
         /**

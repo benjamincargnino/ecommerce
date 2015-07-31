@@ -30,6 +30,10 @@ use ecommerce\model\Product;
             $oProduct->setPrice(floatval($aProduct['price']));
             $oProduct->setRating(intval($aProduct['rating']));
             $oProduct->setActive(intval($aProduct['active']));
+            $aCategories = CategoryManager::getFromProductId($oProduct->getId());
+            foreach($aCategories as $oCategory) {
+                $oProduct->addCategory($oCategory);
+            }
             return $oProduct;
         }
 
@@ -47,7 +51,7 @@ use ecommerce\model\Product;
             $oProduct = null;
             if (false !== $aProductRow) {
                 $oProduct = self::convertToObject($aProductRow);
-            }
+            } 
             return $oProduct;
         }
 

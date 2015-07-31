@@ -16,7 +16,12 @@
 		<tr>
 			<td><?= $oProduct->getId(); ?></td>
 			<td><a href="<?= $oProduct->getUrl(); ?>"><?= $oProduct->getName(); ?></a></td>
-			<td><?= $oProduct->getShortDescription(50); ?></td> 
+			<td><?= $oProduct->getShortDescription(50); ?>
+			<br><?php
+			foreach($oProduct->getCategories() as $category){  ?>
+			<span class="label label-success"><?php echo $category->getName() ?></span>
+			<?php } ?>
+			</td>
 			<td><?= $oProduct->getPrice(); ?></td>
 			<td><a href="http://localhost/ecommerce/index.php?page=product&action=archive&id=<?= $oProduct->getId(); ?>" class="btn btn-<?= $oProduct->getActive() == 1?"success":"danger"; ?> btn-xs"><span class="glyphicon glyphicon-<?= $oProduct->getActive() == 1?"ok":"remove"; ?>"></span></a></td>  
 			<td><a class="btn btn-primary" href="http://localhost/ecommerce/index.php?page=product&action=edit&id=<?= $oProduct->getId(); ?>" id="modifier"> Modifier </a>

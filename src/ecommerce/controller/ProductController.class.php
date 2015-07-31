@@ -63,7 +63,6 @@ private function showAction()
     $iId = intval($_GET['id']);
 
     $oProduct = ProductManager::get($iId);
-
             // product not found => redirect home
     if (null === $oProduct) {
         $this->homeAction();
