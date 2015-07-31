@@ -145,4 +145,10 @@ class CategoryController
             echo "La catégorie ne peux pas être supprimée car elle contient des produits";
         }
     }
+
+    private function statsAction()
+    {
+        $aProducts = CategoryManager::getNumberProducts();
+        require ROOT . 'src/ecommerce/view/category/stats.php';
+    }
 }

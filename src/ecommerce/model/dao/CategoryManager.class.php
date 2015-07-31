@@ -133,4 +133,16 @@ public static function remove($iId)
         throw new \Exception($sLastSqlError);
     }
 }
+
+public static function getNumberProducts()
+{
+    $sQuery =  " SELECT category.id, category.name, category.description, COUNT( product_id ) AS numberproducts ";
+    $sQuery .= " FROM category INNER JOIN product_category ON category.id = product_category.category_id" ;
+    $sQuery .= " GROUP BY category.id, category.name, category.description";
+    $aCategories = array();
+    foreach (DBOperation::getAll($sQuery) as $aCategory) {
+        $aCategories[] = $aCategory;
+    }
+    return $aCategories;
+}
 }

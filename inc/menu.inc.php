@@ -47,6 +47,14 @@ use ecommerce\model\dao\UserManager;
                                 class="glyphicon glyphicon-list"></span>&nbsp; Produits
                             </a>
                             </li>
+                            <li><a href="index.php?page=category&action=stats"><span
+                                class="glyphicon glyphicon-list"></span>&nbsp; Statistiques
+                            </a>
+                            </li>
+                            <li><a href="index.php?page=product&action=order"><span
+                                class="glyphicon glyphicon-list"></span>&nbsp; Commandes
+                            </a>
+                            </li>
                         </ul>
                 </li>
                 <?php endif; ?>

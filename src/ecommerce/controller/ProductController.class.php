@@ -19,8 +19,8 @@ class ProductController
 
     public function __construct()
     {
-     $sAction = 'home';
-     if (array_key_exists('action', $_GET)) {
+       $sAction = 'home';
+       if (array_key_exists('action', $_GET)) {
         $sAction = $_GET['action'];
     }
 
@@ -161,7 +161,7 @@ private function cartAction()
 
 private function confirmationAction()
 {
- {
+   {
     if (array_key_exists('remove', $_POST)) {
         $oCartProduct = new CartProduct();
         $oCartProduct->setId(intval($_POST['product']));
@@ -216,23 +216,23 @@ public function submitorderAction()
 
 private function commentAction()
 {
-   $name =  $_POST['name'];
-   $comment = $_POST['comment'];
-   $iMark = $_POST['stars'];
+ $name =  $_POST['name'];
+ $comment = $_POST['comment'];
+ $iMark = $_POST['stars'];
 
-   $productId = $_POST['product-id'];
-   $oProduct =  ProductManager::get($productId);
-   $oUser = UserManager::getCurrent();
+ $productId = $_POST['product-id'];
+ $oProduct =  ProductManager::get($productId);
+ $oUser = UserManager::getCurrent();
 
-   $oComment = new Comment();
-   $oComment->setDate(date('Y-m-d H:i:s'));
-   $oComment->setMark($iMark);
-   $oComment->setName($name);
-   $oComment->setComment($comment);
-   $oComment->setProduct($oProduct);
-   $oComment->setUser($oUser);
+ $oComment = new Comment();
+ $oComment->setDate(date('Y-m-d H:i:s'));
+ $oComment->setMark($iMark);
+ $oComment->setName($name);
+ $oComment->setComment($comment);
+ $oComment->setProduct($oProduct);
+ $oComment->setUser($oUser);
 
-   try{
+ try{
     $result = CommentManager::create($oComment);
 }catch (\Exception $e){
     $result = $e->getMessage();
@@ -285,5 +285,12 @@ private function archiveAction()
     }    
     $aProducts = ProductManager::getAll();
     require ROOT . 'src/ecommerce/view/product/list.php';
-}    
+}
+
+public function orderAction()
+{
+    $aAllOrders = OrderManager::getOrders();
+    require ROOT . 'src/ecommerce/view/allorders.php';
+}   
+
 }

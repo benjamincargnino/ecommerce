@@ -78,4 +78,9 @@
         {
             return $this->total;
         }
+
+        public function getTotalTTC()
+        {
+            return ($this->total)*1.2;
+        }
     }

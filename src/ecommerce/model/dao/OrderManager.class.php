@@ -34,5 +34,16 @@ use ecommerce\model\Order;
             }
             return $aAllOrders;
         }
+
+        public static function getOrders()
+        {
+            $sQuery = " select * from orders ";
+            $sQuery .= " ORDER BY date DESC ";
+            $aAllOrders = [];
+            foreach (DBOperation::getAll($sQuery) as $aOrder) {
+                $aAllOrders[] = self::convertToObject($aOrder);
+            }
+            return $aAllOrders;
+        }
     }
 

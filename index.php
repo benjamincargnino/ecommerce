@@ -23,7 +23,6 @@ if (array_key_exists('page', $_GET)) {
 switch ($sPage) {
 	case "home":
 	case "index":
-			// header('location: index.php');	
 	homeAction($sPage);
 	break;
 	case "login":
