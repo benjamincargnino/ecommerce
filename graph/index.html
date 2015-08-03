@@ -1,0 +1,38 @@
+<script src="jquery.js"></script>
+<script src="jquery.flot.js"></script>
+<script src="jquery.flot.pie.js"></script>
+ 
+<!-- CSS -->
+<style type="text/css">
+	#flotcontainer {
+    width: 600px;
+    height: 200px;
+    text-align: left;
+}
+</style>
+ 
+<!-- Javascript -->
+<script type="text/javascript">
+$(function () { 
+    var data = [
+        {label: "category 1", data:10},
+        {label: "category 2", data: 20},
+        {label: "category 3", data: 30},
+        {label: "category 4", data: 40},
+        {label: "category 5", data: 50},
+        {label: "category 6", data: 60},
+        {label: "category 7", data: 70}
+    ];
+ 
+    var options = {
+            series: {
+                pie: {show: true}
+                    }
+         };
+ 
+    $.plot($("#flotcontainer"), data, options);  
+});
+</script>
+ 
+<!-- HTML -->
+<div id="flotcontainer"></div>

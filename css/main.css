@@ -21,3 +21,9 @@
 .account .content table img {
     max-height: 100px;
 }
+
+#flotcontainer {
+    width: 600px;
+    height: 200px;
+    text-align: left;
+}

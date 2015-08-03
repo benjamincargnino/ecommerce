@@ -22,3 +22,23 @@
 	</tbody>
 </table>
 <hr>
+
+<div id="flotcontainer"></div>
+
+<script>
+$(function () { 
+    var data = [
+    <?php foreach ($aProducts as $key => $value): ?>
+        {label: "<?= $value['name'] ?>", data:<?= $value['numberproducts'] ?>},
+     <?php endforeach; ?>
+    ];
+ 
+    var options = {
+            series: {
+                pie: {show: true}
+                    }
+         };
+ 
+    $.plot($("#flotcontainer"), data, options);  
+});
+</script>
